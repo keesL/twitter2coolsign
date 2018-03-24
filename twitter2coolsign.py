@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-import twitter
 import sys
+import twitter
 import xml.etree.ElementTree as ET
 from config import Config
 from datetime import datetime
@@ -38,10 +38,13 @@ def formatRSS(timeline):
 
 	for timestamp in sorted(timeline, reverse=True):
 		item = ET.SubElement(channel, 'item')
+
 		user = ET.SubElement(item, 'user') 
 		user.text = timeline[timestamp]['user']
+
 		tweet = ET.SubElement(item, 'tweet')
 		tweet.text = timeline[timestamp]['text']
+
 		when = ET.SubElement(item, 'when') 
 		when.text = datetime.fromtimestamp(timestamp).strftime('%c')
 
