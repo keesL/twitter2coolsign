@@ -1,4 +1,12 @@
 #!/usr/bin/python3
+""" Pull the timeline of a collection of twitter users and format it into an RSS feed that can be read by Coolsign digital diplay software.
+
+Requires the python-twitter library:
+	https://python-twitter.readthedocs.io/en/latest/#
+
+Created 2018, Kees Leune <kees@leune.org>
+
+"""
 import sys
 import twitter
 import xml.etree.ElementTree as ET
@@ -7,6 +15,8 @@ from datetime import datetime
 
 
 def getAPI():
+	""" Retrieve API instance. Information for setting up these keys and secrets can be found at https://python-twitter.readthedocs.io/en/latest/getting_started.html
+	"""
 	api = twitter.Api(consumer_key        = Config.twitter_consumerKey,
 	                  consumer_secret     = Config.twitter_consumerSecret,
 	                  access_token_key    = Config.twitter_access_token,
@@ -16,7 +26,7 @@ def getAPI():
 
 def addToTimeline(api, twit, timeline):
 	""" Build the timeline. Note that if two tweets are sent at exactly 
-    the same time, only the last one will show up. This is an acceptable risk
+    the same time, only the last one will show up. This is an acceptable risk.
 	"""
 	tweets = api.GetUserTimeline(screen_name=twit, count=Config.numTweets)
 	for tweet in tweets:
@@ -52,6 +62,7 @@ def formatRSS(timeline):
 
 
 def main(outputfile):
+	""" Main function; ties everything together """
 	timeline = {}
 	api = getAPI()
 
@@ -65,6 +76,7 @@ def main(outputfile):
 
 
 if __name__ == "__main__":
+	""" Make sure we're invoked correctly. """
     if len(sys.argv) < 2:
         sys.stderr.write('Usage: {} outputfile\n'.format(sys.argv[0]))
         sys.exit(1)
