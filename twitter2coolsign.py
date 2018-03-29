@@ -17,30 +17,30 @@ from datetime import datetime
 def getAPI():
 	""" Retrieve API instance. Information for setting up these keys and secrets can be found at https://python-twitter.readthedocs.io/en/latest/getting_started.html
 	"""
-	api = twitter.Api(consumer_key        = Config.twitter_consumerKey,
-	                  consumer_secret     = Config.twitter_consumerSecret,
-	                  access_token_key    = Config.twitter_access_token,
-	                  access_token_secret = Config.twitter_access_token_secret)
+	api = twitter.Api(consumer_key		= Config.twitter_consumerKey,
+					  consumer_secret	 = Config.twitter_consumerSecret,
+					  access_token_key	= Config.twitter_access_token,
+					  access_token_secret = Config.twitter_access_token_secret)
 	return api
 
 
 def addToTimeline(api, twit, timeline):
 	""" Build the timeline. Note that if two tweets are sent at exactly 
-    the same time, only the last one will show up. This is an acceptable risk.
+	the same time, only the last one will show up. This is an acceptable risk.
 	"""
 	tweets = api.GetUserTimeline(screen_name=twit, count=Config.numTweets)
 	for tweet in tweets:
 		timeline[tweet.created_at_in_seconds] = {
 			'text': tweet.text,
-			'user': twit
+			'user': '@'+twit.strip()
 		}
 	return timeline
 
 
 def formatRSS(timeline):
 	""" Format the timeline into a fake-RSS feed. Tweets will 
-    appear in reverse chronological order.
-    """
+	appear in reverse chronological order.
+	"""
 
 	root=ET.Element('rss')
 	root.attrib={'version': '2.0'}
@@ -77,8 +77,8 @@ def main(outputfile):
 
 if __name__ == "__main__":
 	""" Make sure we're invoked correctly. """
-    if len(sys.argv) < 2:
-        sys.stderr.write('Usage: {} outputfile\n'.format(sys.argv[0]))
-        sys.exit(1)
+	if len(sys.argv) < 2:
+		sys.stderr.write('Usage: {} outputfile\n'.format(sys.argv[0]))
+		sys.exit(1)
 
-    main(sys.argv[1])
+	main(sys.argv[1])
