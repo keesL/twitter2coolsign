@@ -20,7 +20,8 @@ def getAPI():
 	api = twitter.Api(consumer_key		= Config.twitter_consumerKey,
 					  consumer_secret	 = Config.twitter_consumerSecret,
 					  access_token_key	= Config.twitter_access_token,
-					  access_token_secret = Config.twitter_access_token_secret)
+					  access_token_secret = Config.twitter_access_token_secret,
+                      tweet_mode="extended")
 	return api
 
 
@@ -31,7 +32,7 @@ def addToTimeline(api, twit, timeline):
 	tweets = api.GetUserTimeline(screen_name=twit, count=Config.numTweets)
 	for tweet in tweets:
 		timeline[tweet.created_at_in_seconds] = {
-			'text': tweet.text,
+			'text': tweet.full_text,
 			'user': '@'+twit.strip()
 		}
 	return timeline
