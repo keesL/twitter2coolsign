@@ -7,6 +7,7 @@ Requires the python-twitter library:
 Created 2018, Kees Leune <kees@leune.org>
 
 """
+import re
 import sys
 import twitter
 import xml.etree.ElementTree as ET
@@ -25,6 +26,17 @@ def getAPI():
 	return api
 
 
+def cleanup(tweet):
+	""" Clean up the tweet so it displays better """
+
+	# remove URLs from tweet body
+	tweet=re.sub("http.+([ ]|$)", "", tweet)
+
+	# Ugly way to remove unicode
+	tweet = tweet.replace(u"\u2019", "'")
+	return tweet.strip()
+
+
 def addToTimeline(api, twit, timeline):
 	""" Build the timeline. Note that if two tweets are sent at exactly 
 	the same time, only the last one will show up. This is an acceptable risk.
@@ -32,7 +44,7 @@ def addToTimeline(api, twit, timeline):
 	tweets = api.GetUserTimeline(screen_name=twit, count=Config.numTweets)
 	for tweet in tweets:
 		timeline[tweet.created_at_in_seconds] = {
-			'text': tweet.full_text,
+			'text': cleanup(tweet.full_text),
 			'user': '@'+twit.strip()
 		}
 	return timeline
