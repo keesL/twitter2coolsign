@@ -59,6 +59,7 @@ def formatRSS(timeline):
 	root.attrib={'version': '2.0'}
 	channel=ET.SubElement(root, 'channel')
 
+	count=0
 	for timestamp in sorted(timeline, reverse=True):
 		item = ET.SubElement(channel, 'item')
 
@@ -70,6 +71,10 @@ def formatRSS(timeline):
 
 		when = ET.SubElement(item, 'when') 
 		when.text = datetime.fromtimestamp(timestamp).strftime('%c')
+
+		count += 1
+		if count == Config.maxPublish:
+			break
 
 	return root
 
